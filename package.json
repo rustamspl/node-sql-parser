@@ -5,7 +5,8 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "build": "mkdir -p build && pegjs -o build/pegjs-parser.js sql.pegjs",
+    "build": "del /f /q \"-p\" \"build\" & mkdir -p build & pegjs -o build/pegjs-parser.js sql.pegjs",
+    "build1": "del /f /q \"-p\" \"build\" & mkdir -p build & pegjs -o C:/dev/sqlast/node_modules/node-sql-parser/build/pegjs-parser.js sql.pegjs ",
     "test": "npm run lint && mocha",
     "lint": "npm run build && eslint .",
     "prepublishOnly": "npm run build",

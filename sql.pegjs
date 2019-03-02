@@ -608,9 +608,10 @@ not_expr
   / (KW_NOT / "!" !"=") __ expr:not_expr {
       return createUnaryExpr('NOT', expr);
     }
-
+collate_expr
+  = __ KW_COLLATE __ i:ident { return i; }
 comparison_expr
-  = left:additive_expr __ rh:comparison_op_right? {
+  = left:additive_expr __ rh:comparison_op_right? cl:collate_expr? {
       if (rh === null) return left;
       else if (rh.type === 'arithmetic') return createBinaryExprChain(left, rh.tail);
       else return createBinaryExpr(rh.op, left, rh.right);
@@ -783,17 +784,18 @@ column
   / quoted_ident
 
 column_name
-  =  start:ident_start parts:column_part* { return start + parts.join(''); }
+  =  start:column_start parts:column_part* { return start + parts.join(''); }
 
 ident_name
   =  start:ident_start parts:ident_part* { return start + parts.join(''); }
 
-ident_start = [A-Za-z_]
+ident_start = [$A-Za-z_]
 
-ident_part  = [A-Za-z0-9_]
+ident_part  = [$A-Za-z0-9_]
 
 // to support column name like `cf1:name` in hbase
-column_part  = [A-Za-z0-9_:]
+column_start  = [$A-Za-z0-9_:]
+column_part  = [$A-Za-z0-9_:]
 
 param
   = l:(':' ident_name) {
@@ -1118,6 +1120,7 @@ KW_RETURN = 'return'i
 KW_ASSIGN = ':='
 
 KW_DUAL = "DUAL"i
+KW_COLLATE = "COLLATE"i
 
 // MySQL extensions to SQL
 OPT_SQL_CALC_FOUND_ROWS = "SQL_CALC_FOUND_ROWS"i
