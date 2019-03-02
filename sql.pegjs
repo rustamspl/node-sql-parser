@@ -799,6 +799,9 @@ param
   = l:(':' ident_name) {
       return { type: 'param', value: l[1] };
     }
+  / l:('?' ) {
+      return { type: 'qparam'};
+    }
 
 aggr_func
   = aggr_fun_count
